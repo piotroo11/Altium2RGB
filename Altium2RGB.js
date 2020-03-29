@@ -1,7 +1,8 @@
 /*Created by Piotr Czapnik 2020*/
 // TODO:
-// * ADD HTML REQUEST
+// * ADD curl JSON POST using 'curl -H "Content-Type: application/json"'
 // * ADD function event handler if color change
+// * TEST on H801 (Tasmota)
 
 function BGR_to_RRGGBB(BGR) {
 var R;
@@ -27,17 +28,20 @@ var B;
 }
 
 function Altium2RGB() {
-var Board;            //IPCB_Board;
-var RRGGBB;           //hex representation od actual layer color;
+var Board;                                       //IPCB_Board;
+var RRGGBB;                                      //hex representation od actual layer color
 var color;
-var IP = "192.168.2.13";
+var IP = "192.168.2.13";                         //Your wifi/domoticz device ip
 var url = "http://" + IP + "/cm?cmnd=Color%20";
+var curl;
 
     Board = PCBServer.GetCurrentPCBBoard;
     if (Board != Null)
     {
        color = BGR_to_RRGGBB(Board.LayerColor(Board.CurrentLayer));
        url = url + color + "00";
-
+       curl = "curl " + url;
+       var objShell = new ActiveXObject("Shell.Application");
+       objShell.ShellExecute("cmd.exe", curl, "C:\\WINDOWS\\system32", "open", "1");
     }
 }
